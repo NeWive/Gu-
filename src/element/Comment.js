@@ -118,11 +118,11 @@ class Comment extends PureComponent {
         try {
             axios.defaults.withCredentials=true;
             let { 'data': { status } } = await axios.post(urlInterfaceGroup.comment.interface, JSON.stringify(formObj));
-            if(status !== 'ok') {
+            if(status === 'code_error') {
                 alert('验证码错误');
                 document.getElementById('commentValidate').value = '';
                 this.requestForValidateImg();
-            }else {
+            }else if(status === 'ok'){
                 alert('发送成功');
                 let { 'data': { list } } = await axios.get(urlInterfaceGroup.commentList.interface);
                 await this.setComment(list);
@@ -132,6 +132,8 @@ class Comment extends PureComponent {
                 document.getElementById('commentSingle').value = '';
                 await this.requestForValidateImg();
                 await this.clearHandler();
+            }else {
+                alert('Ops~网络开小差惹');
             }
         }catch (e) {
             console.log(e);

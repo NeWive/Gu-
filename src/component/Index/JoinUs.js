@@ -7,7 +7,8 @@ import Status from './Status';
 import './JoinUs.css';
 import Successful from "./Successful";
 import { Motion, spring } from "react-motion/lib/react-motion";
-
+import axios from "axios";
+import {urlInterfaceGroup} from "../../config/url.config";
 //窗口滚动监听touchmove
 
 function mapStateToProps(state) {
@@ -16,12 +17,31 @@ function mapStateToProps(state) {
         emailForStatus: state.emailForStatus,
     }
 }
+
+async function requestForValidateImg() {
+    let toRemoveDom = document.getElementById('validateCodeImg');
+    let parent = document.getElementById('validate_code_box');
+    parent.removeChild(toRemoveDom);
+    let {data} = await axios({
+        method: 'GET',
+        url: urlInterfaceGroup.validateCode.interface,
+        responseType: 'blob'
+    });
+    let imgDom = document.createElement('img');
+    imgDom.onload = () => {
+        window.URL.revokeObjectURL(imgDom.src);
+    };
+    imgDom.src = window.URL.createObjectURL(data);
+    imgDom.id = 'validateCodeImg';
+    parent.appendChild(imgDom);
+}
+
 class JoinUs extends PureComponent {
     constructor(props){
         super(props);
         this.state = {
             selected: 0,
-            successful: 1,
+            successful: 0,
             start: 0,
             end: 1,
         };
@@ -94,11 +114,13 @@ class JoinUs extends PureComponent {
     async clickLayerHandler(e) {
         e.stopPropagation();
         if(e.target.className === 'popBox') {
+            console.log(e.target);
             await this.clearAllHandler();
-            this.closePortalHandler();
+            await this.closePortalHandler();
         }
     }
     async closePortalHandler() {
+        requestForValidateImg().then();
         await this.exchangeOpacity();
         this.props.dispatch({
             type: 'OPERATING_PORTAL'

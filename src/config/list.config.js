@@ -27,7 +27,7 @@ const departmentSelectionList = [
         value: '4',
     },
     {
-        name: '游戏',
+        name: '游戏开发',
         value: '5',
     }
 ];
@@ -228,7 +228,7 @@ const departmentList = new Map(
         ['前端开发', 'FrontEnd Develop',],
         ['程序开发', 'BackEnd Develop',],
         ['APP开发', 'Android Develop',],
-        ['游戏', 'Game Develop',],]
+        ['游戏开发', 'Game Develop',],]
 );
 const membersList = [
     {
